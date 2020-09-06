@@ -1,4 +1,4 @@
-package com.crud.kodillalibrary.controller;
+package com.crud.kodillalibrary.controllers;
 
 public class ItemNotFoundException extends Exception{
 }

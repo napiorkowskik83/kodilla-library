@@ -14,21 +14,21 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "readers")
+@Entity(name = "READERS")
 public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "FIRST_NAME")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "LAST_NAME")
     private String lastName;
 
     @NotNull
-    @Column(name = "created")
+    @Column(name = "CREATED")
     private Date created = new Date();
 
     @OneToMany(
@@ -40,6 +40,12 @@ public class Reader {
     List<Borrowing> borrowings = new ArrayList<>();
 
     public Reader(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Reader(Long id, String firstName, String lastName) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }

@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "borrowings")
+@Entity(name = "BORROWINGS")
 public class Borrowing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,21 +21,27 @@ public class Borrowing {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_copy_id")
+    @JoinColumn(name = "BOOK_COPY_ID")
     private BookCopy bookCopy;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "reader_id")
+    @JoinColumn(name = "READER_ID")
     private Reader reader;
 
     @NotNull
-    @Column(name = "borrow_date" )
+    @Column(name = "BORROW_DATE" )
     private Date borrowDate = new Date();
 
-    @Column(name = "return_date" )
+    @Column(name = "RETURN_DATE" )
     private Date returnDate;
 
     public Borrowing(BookCopy bookCopy , Reader reader) {
+        this.bookCopy = bookCopy;
+        this.reader = reader;
+    }
+
+    public Borrowing(Long id, BookCopy bookCopy , Reader reader) {
+        this.id = id;
         this.bookCopy = bookCopy;
         this.reader = reader;
     }

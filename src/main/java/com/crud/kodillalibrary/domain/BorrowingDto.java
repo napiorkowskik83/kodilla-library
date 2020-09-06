@@ -8,8 +8,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class BorrowingDto {
     private Long id;
-    private BookCopy bookCopy;
-    private Reader reader;
+    private Long bookCopyId;
+    private Long readerId;
     private Date borrowDate;
     private Date returnDate;
 }

@@ -38,13 +38,7 @@ public class BorrowingRepositoryTestSuite {
         Optional<Borrowing> readBorrowing = borrowingRepository.findById(id);
         Assert.assertTrue(readBorrowing.isPresent());
 
-//        System.out.println(borrowing1.getId() + "; " + borrowing1.getBookCopy() + "; " + borrowing1.getBookCopy().getBook());
-//        if(readBorrowing.isPresent()){
-//            System.out.println(readBorrowing.get().getId() + "; " + readBorrowing.get().getBookCopy() + "; "
-//                    + readBorrowing.get().getBookCopy().getBook());
-//        }
-
         //CleanUp
-        borrowingRepository.deleteById(id);
+        //borrowingRepository.deleteById(id);
     }
 }

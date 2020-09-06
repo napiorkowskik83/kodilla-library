@@ -1,5 +1,7 @@
 package com.crud.kodillalibrary.mappers;
 
+import com.crud.kodillalibrary.controllers.ItemNotFoundException;
+import com.crud.kodillalibrary.domain.Book;
 import com.crud.kodillalibrary.domain.BookCopy;
 import com.crud.kodillalibrary.domain.BookCopyDto;
 import com.crud.kodillalibrary.repositories.BookRepository;
@@ -12,27 +14,28 @@ import java.util.stream.Collectors;
 @Component
 public class BookCopyMapper {
 
-    public BookCopy mapToBookCopy(BookCopyDto bookCopyDto){
+    @Autowired
+    BookRepository bookRepository;
+
+    public BookCopy mapToBookCopy(BookCopyDto bookCopyDto, Book book) throws ItemNotFoundException{
         return new BookCopy(
                 bookCopyDto.getId(),
-                bookCopyDto.getBook(),
-                bookCopyDto.getStatus(),
-                bookCopyDto.getBorrowingList()
+                book,
+                bookCopyDto.getStatus()
         );
     }
 
     public BookCopyDto mapToBookCopyDto(BookCopy bookCopy){
         return new BookCopyDto(
                 bookCopy.getId(),
-                bookCopy.getBook(),
-                bookCopy.getStatus(),
-                bookCopy.getBorrowingList()
+                bookCopy.getBook().getId(),
+                bookCopy.getStatus()
         );
     }
 
     public List<BookCopyDto> mapToBookCopyDtoList(List<BookCopy> bookCopyList){
         return bookCopyList.stream()
-                .map(t -> new BookCopyDto(t.getId(), t.getBook(), t.getStatus(), t.getBorrowingList()))
+                .map(t -> new BookCopyDto(t.getId(), t.getBook().getId(), t.getStatus()))
                 .collect(Collectors.toList());
     }
 }

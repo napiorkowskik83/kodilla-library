@@ -12,5 +12,4 @@ public class ReaderDto {
     private String firstName;
     private String lastName;
     private Date created;
-    List<Borrowing> borrowings;
 }

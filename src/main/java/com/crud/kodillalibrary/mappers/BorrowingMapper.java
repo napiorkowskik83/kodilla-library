@@ -1,7 +1,13 @@
 package com.crud.kodillalibrary.mappers;
 
+import com.crud.kodillalibrary.controllers.ItemNotFoundException;
+import com.crud.kodillalibrary.domain.BookCopy;
 import com.crud.kodillalibrary.domain.Borrowing;
 import com.crud.kodillalibrary.domain.BorrowingDto;
+import com.crud.kodillalibrary.domain.Reader;
+import com.crud.kodillalibrary.repositories.BookCopyRepository;
+import com.crud.kodillalibrary.repositories.ReaderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,29 +16,26 @@ import java.util.stream.Collectors;
 @Component
 public class BorrowingMapper {
 
+    public Borrowing mapToBorrowing(BorrowingDto borrowingDto, BookCopy bookCopy, Reader reader){
+        return new Borrowing(
+                borrowingDto.getId(),
+                bookCopy,
+                reader);
+    }
+
     public BorrowingDto mapToBorrowingDto(Borrowing borrowing){
         return new BorrowingDto(
                 borrowing.getId(),
-                borrowing.getBookCopy(),
-                borrowing.getReader(),
+                borrowing.getBookCopy().getId(),
+                borrowing.getReader().getId(),
                 borrowing.getBorrowDate(),
                 borrowing.getReturnDate()
         );
     }
 
-    public Borrowing mapToBorrowing(BorrowingDto borrowingDto){
-        return new Borrowing(
-                borrowingDto.getId(),
-                borrowingDto.getBookCopy(),
-                borrowingDto.getReader(),
-                borrowingDto.getBorrowDate(),
-                borrowingDto.getReturnDate()
-        );
-    }
-
     public List<BorrowingDto> mapToBorrowingDtoList(List<Borrowing> borrowingList){
         return borrowingList.stream()
-                .map(t -> new BorrowingDto(t.getId(), t.getBookCopy(), t.getReader(), t.getBorrowDate(), t.getReturnDate()))
+                .map(t -> new BorrowingDto(t.getId(), t.getBookCopy().getId(), t.getReader().getId(), t.getBorrowDate(), t.getReturnDate()))
                 .collect(Collectors.toList());
     }
 }

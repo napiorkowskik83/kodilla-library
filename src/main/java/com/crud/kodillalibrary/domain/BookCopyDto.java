@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BookCopyDto {
     private Long id;
-    private Book book;
+    private Long bookId;
     private String status;
-    List<Borrowing> borrowingList;
 }

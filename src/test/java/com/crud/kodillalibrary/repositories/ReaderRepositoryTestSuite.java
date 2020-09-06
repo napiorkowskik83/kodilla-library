@@ -20,16 +20,22 @@ public class ReaderRepositoryTestSuite {
     public void testReaderRepositorySave() {
         //Given
         Reader reader1 = new Reader("Joe", "Doe");
+        Reader reader2 = new Reader("Jan", "Dzik");
 
         //When
         readerRepository.save(reader1);
+        readerRepository.save(reader2);
 
         //Then
-        Long id = reader1.getId();
-        Optional<Reader> readReader = readerRepository.findById(id);
-        Assert.assertTrue(readReader.isPresent());
+        Long id1 = reader1.getId();
+        Long id2 = reader2.getId();
+        Optional<Reader> readReader1 = readerRepository.findById(id1);
+        Optional<Reader> readReader2 = readerRepository.findById(id2);
+        Assert.assertTrue(readReader1.isPresent());
+        Assert.assertTrue(readReader2.isPresent());
 
         //CleanUp
-        readerRepository.deleteById(id);
+        readerRepository.deleteById(id1);
+        readerRepository.deleteById(id2);
     }
 }

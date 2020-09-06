@@ -13,27 +13,27 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "books")
+@Entity(name = "BOOKS")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "TITLE")
     private String title;
 
-    @Column(name = "author")
+    @Column(name = "AUTHOR")
     private String author;
 
-    @Column(name = "release_year")
+    @Column(name = "RELEASE_YEAR")
     private Integer releaseYear;
 
     @OneToMany(
             targetEntity = BookCopy.class,
             mappedBy = "book",
-            //cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            //cascade = CascadeType.ALL
+            fetch = FetchType.EAGER
     )
     private List<BookCopy> bookCopies  = new ArrayList<>();
 
@@ -42,4 +42,12 @@ public class Book {
         this.author = author;
         this.releaseYear = releaseYear;
     }
+
+    public Book(Long id, String title, String author, Integer releaseYear) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.releaseYear = releaseYear;
+    }
+
 }

@@ -9,11 +9,18 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedNativeQuery(
+        name = "BookCopy.getAvailableBookCopiesOfBook",
+        query = "SELECT * FROM BOOK_COPIES " +
+                "WHERE (STATUS = 'available' AND BOOK_ID = :BOOK_ID)",
+        resultClass = BookCopy.class
+)
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "book_copies")
+@Entity(name = "BOOK_COPIES")
 public class BookCopy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +28,10 @@ public class BookCopy {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "BOOK_ID")
     private Book book;
 
-    @Column(name = "status")
+    @Column(name = "STATUS")
     private String status = "available";
 
     @OneToMany(
@@ -39,4 +46,9 @@ public class BookCopy {
         this.book = book;
     }
 
+    public BookCopy(Long id,Book book, String status) {
+        this.id = id;
+        this.book = book;
+        this.status = status;
+    }
 }
