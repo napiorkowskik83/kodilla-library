@@ -4,21 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "READERS")
 public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "id", unique = true)
+    @Column(name = "ID", unique = true)
     private Long id;
 
     @Column(name = "FIRST_NAME")
@@ -30,14 +28,6 @@ public class Reader {
     @NotNull
     @Column(name = "CREATED")
     private Date created = new Date();
-
-    @OneToMany(
-            targetEntity = Borrowing.class,
-            mappedBy = "reader",
-            //cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    List<Borrowing> borrowings = new ArrayList<>();
 
     public Reader(String firstName, String lastName) {
         this.firstName = firstName;

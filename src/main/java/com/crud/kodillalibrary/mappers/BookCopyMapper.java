@@ -17,7 +17,7 @@ public class BookCopyMapper {
     @Autowired
     BookRepository bookRepository;
 
-    public BookCopy mapToBookCopy(BookCopyDto bookCopyDto, Book book) throws ItemNotFoundException{
+    public BookCopy mapToBookCopy(BookCopyDto bookCopyDto, Book book){
         return new BookCopy(
                 bookCopyDto.getId(),
                 book,

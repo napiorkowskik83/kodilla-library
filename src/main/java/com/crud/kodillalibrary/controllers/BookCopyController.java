@@ -3,14 +3,10 @@ package com.crud.kodillalibrary.controllers;
 import com.crud.kodillalibrary.domain.*;
 import com.crud.kodillalibrary.mappers.BookCopyMapper;
 import com.crud.kodillalibrary.services.BookCopyDbService;
-import com.crud.kodillalibrary.services.BookDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/v1/library/bookCopy")
@@ -18,47 +14,71 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class BookCopyController {
     private final BookCopyDbService bookCopyDbService;
     private final BookCopyMapper bookCopyMapper;
-    private final BookDbService bookDbService;
 
     @Autowired
     public BookCopyController(BookCopyDbService bookCopyDbService,
-                              BookCopyMapper bookCopyMapper,
-                              BookDbService bookDbService
-                            ){
+                              BookCopyMapper bookCopyMapper) {
         this.bookCopyDbService = bookCopyDbService;
         this.bookCopyMapper = bookCopyMapper;
-        this.bookDbService = bookDbService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "addBookCopy", consumes = APPLICATION_JSON_VALUE)
-    public void addBookCopy(@RequestBody BookCopyDto bookCopyDto) throws ItemNotFoundException {
-        Book book = bookDbService.getBook(bookCopyDto.getBookId()).orElseThrow(ItemNotFoundException::new);
-        BookCopy bookCopy = bookCopyMapper.mapToBookCopy(bookCopyDto, book);
-        book.getBookCopies().add(bookCopy);
-        bookCopyDbService.saveBookCopy(bookCopy);
+    @PostMapping(value = "addBookCopy")
+    public void addBookCopy(@RequestParam Long bookId) throws BookNotFoundException {
+        bookCopyDbService.addBookCopy(bookId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getAllBookCopies")
+    @PutMapping(value = "setStatusToAvailable")
+    public BookCopyDto setStatusToAvailable(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
+        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToAvailable(bookCopyId));
+    }
+
+    @PutMapping(value = "setStatusToBorrowed")
+    public BookCopyDto setStatusToBorrowed(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
+        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToBorrowed(bookCopyId));
+    }
+
+    @PutMapping(value = "setStatusToLost")
+    public BookCopyDto setStatusToLost(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
+        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToLost(bookCopyId));
+    }
+
+    @PutMapping(value = "setStatusToTattered")
+    public BookCopyDto setStatusToTattered(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
+        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToTattered(bookCopyId));
+    }
+
+    @GetMapping(value = "getAllBookCopies")
     public List<BookCopyDto> getAllBookCopies() {
         return bookCopyMapper.mapToBookCopyDtoList(bookCopyDbService.getAllBookCopies());
     }
 
-//    @RequestMapping(method = RequestMethod.GET, value = "getAvailableBookCopiesOfBook")
-//    public List<BookCopyDto> getBookCopiesOfBook(@RequestParam Long bookId){
-//        return getAllBookCopies().stream()
-//                .filter(t-> bookId.equals(t.getBookId()))
-//                .collect(Collectors.toList());
-//    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "getAvailableBookCopiesOfBook")
-    public List<BookCopyDto> getAvailableBookCopiesOfBook(@RequestParam Long bookId){
-        return getAllBookCopies().stream()
-                .filter(t-> bookId.equals(t.getBookId()) && ("available").equals(t.getStatus()))
-                .collect(Collectors.toList());
+    @GetMapping(value = "getAllAvailableBookCopies")
+    public List<BookCopyDto> getAllAvailableBookCopies() {
+        return bookCopyMapper.mapToBookCopyDtoList(bookCopyDbService.getAllAvailableBookCopies());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getBookCopy")
-    public BookCopyDto getBookCopy(@RequestParam Long bookCopyId) throws ItemNotFoundException {
-        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.getBookCopy(bookCopyId).orElseThrow(ItemNotFoundException::new));
+    @GetMapping(value = "getAllBookCopiesOfBook")
+    public List<BookCopyDto> getAllBookCopiesOfBook(@RequestParam Long bookId) {
+        return bookCopyMapper.mapToBookCopyDtoList(bookCopyDbService.getAllBookCopiesOfBook(bookId));
+    }
+
+    @GetMapping(value = "getAvailableBookCopiesOfBook")
+    public List<BookCopyDto> getAvailableBookCopiesOfBook(@RequestParam Long bookId) {
+        return bookCopyMapper.mapToBookCopyDtoList(bookCopyDbService.getAvailableBookCopiesOfBook(bookId));
+    }
+
+    @GetMapping(value = "getAllBookCopiesOfTitle")
+    public List<BookCopyDto> getAllBookCopiesOfTitle(@RequestParam String title) {
+        return bookCopyMapper.mapToBookCopyDtoList(bookCopyDbService.getAllBookCopiesOfTitle(title));
+    }
+
+    @GetMapping(value = "getAvailableBookCopiesOfTitle")
+    public List<BookCopyDto> getAvailableBookCopiesOfTitle(@RequestParam String title) {
+        return bookCopyMapper.mapToBookCopyDtoList(bookCopyDbService.getAvailableBookCopiesOfTitle(title));
+    }
+
+    @GetMapping(value = "getBookCopy")
+    public BookCopyDto getBookCopy(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
+        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.getBookCopy(bookCopyId));
     }
 }

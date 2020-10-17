@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -17,7 +18,7 @@ public class BookRepositoryTestSuite {
     BookRepository bookRepository;
 
     @Test
-    public void testBookRepositorySave(){
+    public void testBookRepositorySaveAndFindById(){
         //Given
         Book book1 = new Book("title1", "author1", 1983);
 
@@ -31,5 +32,26 @@ public class BookRepositoryTestSuite {
 
         //CleanUp
         bookRepository.deleteById(id);
+    }
+
+    @Test
+    public void testBookRepositoryFindAll(){
+        //Given
+        Book book1 = new Book("title1", "author1", 1983);
+        Book book2 = new Book("title2", "author2", 2019);
+
+        //When
+        bookRepository.save(book1);
+        bookRepository.save(book2);
+
+        //Then
+        Long id1 = book1.getId();
+        Long id2 = book2.getId();
+        List<Book> retrievedBooks = bookRepository.findAll();
+        Assert.assertEquals(2, retrievedBooks.size());
+
+        //CleanUp
+        bookRepository.deleteById(id1);
+        bookRepository.deleteById(id2);
     }
 }

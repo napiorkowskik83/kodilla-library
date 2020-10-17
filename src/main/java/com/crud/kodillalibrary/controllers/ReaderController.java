@@ -18,23 +18,28 @@ public class ReaderController {
     private final ReaderMapper readerMapper;
 
     @Autowired
-    public ReaderController(ReaderDbService readerDbService, ReaderMapper readerMapper){
+    public ReaderController(ReaderDbService readerDbService, ReaderMapper readerMapper) {
         this.readerDbService = readerDbService;
         this.readerMapper = readerMapper;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "addReader", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "addReader", consumes = APPLICATION_JSON_VALUE)
     public void addReader(@RequestBody ReaderDto readerDto) {
         readerDbService.saveReader(readerMapper.mapToReader(readerDto));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getReaders")
+    @PutMapping(value = "updateReader")
+    public ReaderDto updateReader(@RequestBody ReaderDto readerDto) throws ReaderNotFoundException {
+        return readerMapper.mapToReaderDto(readerDbService.updateReader(readerDto));
+    }
+
+    @GetMapping(value = "getReaders")
     public List<ReaderDto> getReaders() {
         return readerMapper.mapToReaderDtoList(readerDbService.getAllReaders());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getReader")
-    public ReaderDto getReader(@RequestParam Long readerId) throws ItemNotFoundException {
-        return readerMapper.mapToReaderDto(readerDbService.getReader(readerId).orElseThrow(ItemNotFoundException::new));
+    @GetMapping(value = "getReader")
+    public ReaderDto getReader(@RequestParam Long readerId) throws ReaderNotFoundException {
+        return readerMapper.mapToReaderDto(readerDbService.getReader(readerId));
     }
 }

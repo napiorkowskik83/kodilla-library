@@ -4,10 +4,37 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+
+@NamedNativeQuery(
+        name = "Borrowing.getAllBorrowingsOfBookCopy",
+        query = "SELECT * FROM BORROWINGS " +
+                "WHERE BOOK_COPY_ID = :BOOK_COPY_ID",
+        resultClass = Borrowing.class
+)
+
+@NamedNativeQuery(
+        name = "Borrowing.getActiveBorrowingsOfBookCopy",
+        query = "SELECT * FROM BORROWINGS " +
+                "WHERE (RETURN_DATE IS NULL AND BOOK_COPY_ID = :BOOK_COPY_ID)",
+        resultClass = Borrowing.class
+)
+
+@NamedNativeQuery(
+        name = "Borrowing.getAllBorrowingsOfReader",
+        query = "SELECT * FROM BORROWINGS " +
+                "WHERE READER_ID = :READER_ID",
+        resultClass = Borrowing.class
+)
+
+@NamedNativeQuery(
+        name = "Borrowing.getActiveBorrowingsOfReader",
+        query = "SELECT * FROM BORROWINGS " +
+                "WHERE (RETURN_DATE IS NULL AND READER_ID = :READER_ID)",
+        resultClass = Borrowing.class
+)
 
 @Getter
 @Setter
@@ -17,14 +44,14 @@ import java.util.Date;
 public class Borrowing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "id", unique = true)
+    @Column(name = "ID", unique = true)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "BOOK_COPY_ID")
     private BookCopy bookCopy;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "READER_ID")
     private Reader reader;
 
