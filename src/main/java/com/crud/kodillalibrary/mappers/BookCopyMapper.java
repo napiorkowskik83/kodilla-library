@@ -1,6 +1,5 @@
 package com.crud.kodillalibrary.mappers;
 
-import com.crud.kodillalibrary.controllers.ItemNotFoundException;
 import com.crud.kodillalibrary.domain.Book;
 import com.crud.kodillalibrary.domain.BookCopy;
 import com.crud.kodillalibrary.domain.BookCopyDto;

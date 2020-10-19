@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NamedNativeQuery(
         name = "BookCopy.getAllAvailableBookCopies",
         query = "SELECT * FROM BOOK_COPIES " +
-                "WHERE STATUS = 'available'",
+                "WHERE STATUS = 'AVAILABLE'",
         resultClass = BookCopy.class
 )
 
@@ -23,7 +23,7 @@ import javax.persistence.*;
 @NamedNativeQuery(
         name = "BookCopy.getAvailableBookCopiesOfBook",
         query = "SELECT * FROM BOOK_COPIES " +
-                "WHERE (STATUS = 'available' AND BOOK_ID = :BOOK_ID)",
+                "WHERE (STATUS = 'AVAILABLE' AND BOOK_ID = :BOOK_ID)",
         resultClass = BookCopy.class
 )
 
@@ -39,7 +39,7 @@ import javax.persistence.*;
         name = "BookCopy.getAvailableBookCopiesOfTitle",
         query = "SELECT * FROM BOOK_COPIES BC " +
                 "JOIN BOOKS B ON B.ID = BC.BOOK_ID " +
-                "WHERE (BC.STATUS = 'available' AND B.TITLE = :TITLE)",
+                "WHERE (BC.STATUS = 'AVAILABLE' AND B.TITLE = :TITLE)",
         resultClass = BookCopy.class
 )
 
@@ -58,8 +58,9 @@ public class BookCopy {
     @JoinColumn(name = "BOOK_ID")
     private Book book;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    private String status = "available";
+    private BookCopyStatus status = BookCopyStatus.AVAILABLE;
 
     public BookCopy(Book book) {
         this.book = book;

@@ -27,24 +27,9 @@ public class BookCopyController {
         bookCopyDbService.addBookCopy(bookId);
     }
 
-    @PutMapping(value = "setStatusToAvailable")
-    public BookCopyDto setStatusToAvailable(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
-        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToAvailable(bookCopyId));
-    }
-
-    @PutMapping(value = "setStatusToBorrowed")
-    public BookCopyDto setStatusToBorrowed(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
-        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToBorrowed(bookCopyId));
-    }
-
-    @PutMapping(value = "setStatusToLost")
-    public BookCopyDto setStatusToLost(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
-        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToLost(bookCopyId));
-    }
-
-    @PutMapping(value = "setStatusToTattered")
-    public BookCopyDto setStatusToTattered(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
-        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusToTattered(bookCopyId));
+    @PutMapping(value = "setStatusTo")
+    public BookCopyDto setStatusTo(@RequestParam Long bookCopyId, BookCopyStatus status) throws BookCopyNotFoundException {
+        return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.setStatusTo(bookCopyId, status));
     }
 
     @GetMapping(value = "getAllBookCopies")
@@ -80,5 +65,10 @@ public class BookCopyController {
     @GetMapping(value = "getBookCopy")
     public BookCopyDto getBookCopy(@RequestParam Long bookCopyId) throws BookCopyNotFoundException {
         return bookCopyMapper.mapToBookCopyDto(bookCopyDbService.getBookCopy(bookCopyId));
+    }
+
+    @DeleteMapping(value = "deleteBookCopy")
+    public void deleteBookCopy(@RequestParam Long bookCopyId) throws BookNotFoundException {
+        bookCopyDbService.deleteBookCopy(bookCopyId);
     }
 }

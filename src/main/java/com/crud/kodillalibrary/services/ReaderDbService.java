@@ -26,7 +26,7 @@ public class ReaderDbService {
     }
 
     public Reader getReader(final Long id) throws ReaderNotFoundException {
-        return readerRepository.findById(id).orElseThrow(ReaderNotFoundException::new);
+        return readerRepository.findById(id).orElseThrow(()-> new ReaderNotFoundException("Reader with pointed ID does not exist!"));
     }
 
     public Reader saveReader(final Reader reader) {
@@ -34,7 +34,7 @@ public class ReaderDbService {
     }
 
     public Reader updateReader(final ReaderDto readerDto) throws ReaderNotFoundException {
-        readerRepository.findById(readerDto.getId()).orElseThrow(ReaderNotFoundException::new);
+        readerRepository.findById(readerDto.getId()).orElseThrow(()-> new ReaderNotFoundException("Reader with pointed ID does not exist!"));
         return readerRepository.save(readerMapper.mapToReader(readerDto));
     }
 

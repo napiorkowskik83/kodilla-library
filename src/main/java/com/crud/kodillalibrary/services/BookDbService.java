@@ -26,7 +26,7 @@ public class BookDbService {
     }
 
     public Book getBook(final Long id) throws BookNotFoundException {
-        return bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+        return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException("Book with pointed ID does not exist!"));
     }
 
     public void saveBook(final Book book) {
@@ -34,7 +34,7 @@ public class BookDbService {
     }
 
     public Book updateBook(final Book book) throws BookNotFoundException {
-        bookRepository.findById(book.getId()).orElseThrow(BookNotFoundException::new);
+        bookRepository.findById(book.getId()).orElseThrow(()-> new BookNotFoundException("Book with pointed ID does not exist!"));
         return bookRepository.save(book);
     }
 

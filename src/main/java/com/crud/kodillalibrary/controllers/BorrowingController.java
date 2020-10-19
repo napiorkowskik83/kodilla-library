@@ -37,17 +37,12 @@ public class BorrowingController {
         return borrowingMapper.mapToBorrowingDto(borrowingDbService.makeReturn(borrowingId));
     }
 
-    @PutMapping(value = "finishBorrowingAsLost")
-    public BorrowingDto finishBorrowingAsLost(@RequestParam Long borrowingId)
+    @PutMapping(value = "finishBorrowingAs")
+    public BorrowingDto finishBorrowingAs(@RequestParam Long borrowingId, BookCopyStatus status)
             throws BorrowingNotFoundException, BookCopyNotFoundException, ActiveBorrowingNotFoundException {
-        return borrowingMapper.mapToBorrowingDto(borrowingDbService.finishBorrowingAsLost(borrowingId));
+        return borrowingMapper.mapToBorrowingDto(borrowingDbService.finishBorrowingAs(borrowingId, status));
     }
 
-    @PutMapping(value = "finishBorrowingAsTattered")
-    public BorrowingDto finishBorrowingAsTattered(@RequestParam Long borrowingId)
-            throws BorrowingNotFoundException, BookCopyNotFoundException, ActiveBorrowingNotFoundException {
-        return borrowingMapper.mapToBorrowingDto(borrowingDbService.finishBorrowingAsTattered(borrowingId));
-    }
 
     @GetMapping(value = "getBorrowing")
     public BorrowingDto getBorrowing(@RequestParam Long borrowingId)

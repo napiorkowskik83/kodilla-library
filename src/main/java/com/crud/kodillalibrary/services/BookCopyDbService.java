@@ -4,6 +4,7 @@ import com.crud.kodillalibrary.controllers.BookCopyNotFoundException;
 import com.crud.kodillalibrary.controllers.BookNotFoundException;
 import com.crud.kodillalibrary.domain.Book;
 import com.crud.kodillalibrary.domain.BookCopy;
+import com.crud.kodillalibrary.domain.BookCopyStatus;
 import com.crud.kodillalibrary.mappers.BookCopyMapper;
 import com.crud.kodillalibrary.repositories.BookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,12 @@ import java.util.List;
 @Service
 public class BookCopyDbService {
     private final BookCopyRepository bookCopyRepository;
-    private final BookCopyMapper bookCopyMapper;
     private final BookDbService bookDbService;
 
     @Autowired
     public BookCopyDbService(final BookCopyRepository bookCopyRepository,
-                             final BookCopyMapper bookCopyMapper,
                              final BookDbService bookDbService) {
         this.bookCopyRepository = bookCopyRepository;
-        this.bookCopyMapper = bookCopyMapper;
         this.bookDbService = bookDbService;
     }
 
@@ -32,26 +30,9 @@ public class BookCopyDbService {
         bookCopyRepository.save(bookCopy);
     }
 
-    public BookCopy setStatusToAvailable(final Long bookCopyId) throws BookCopyNotFoundException {
-        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).orElseThrow(BookCopyNotFoundException::new);
-        bookCopy.setStatus("available");
-        return bookCopyRepository.save(bookCopy);
-    }
-    public BookCopy setStatusToBorrowed(final Long bookCopyId) throws BookCopyNotFoundException {
-        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).orElseThrow(BookCopyNotFoundException::new);
-        bookCopy.setStatus("borrowed");
-        return bookCopyRepository.save(bookCopy);
-    }
-
-    public BookCopy setStatusToLost(final Long bookCopyId) throws BookCopyNotFoundException {
-        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).orElseThrow(BookCopyNotFoundException::new);
-        bookCopy.setStatus("lost");
-        return bookCopyRepository.save(bookCopy);
-    }
-
-    public BookCopy setStatusToTattered(final Long bookCopyId) throws BookCopyNotFoundException {
-        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).orElseThrow(BookCopyNotFoundException::new);
-        bookCopy.setStatus("tattered");
+    public BookCopy setStatusTo(final Long bookCopyId, final BookCopyStatus status) throws BookCopyNotFoundException {
+        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).orElseThrow(()->new BookCopyNotFoundException("Book copy with pointed ID does not exist"));
+        bookCopy.setStatus(status);
         return bookCopyRepository.save(bookCopy);
     }
 
@@ -80,11 +61,11 @@ public class BookCopyDbService {
     }
 
     public BookCopy getBookCopy(final Long id) throws BookCopyNotFoundException {
-        return bookCopyRepository.findById(id).orElseThrow(BookCopyNotFoundException::new);
+        return bookCopyRepository.findById(id).orElseThrow(()->new BookCopyNotFoundException("Book copy with pointed ID does not exist"));
     }
 
     public void deleteBookCopy(final Long bookCopyId) throws BookCopyNotFoundException, BookNotFoundException {
-        BookCopy bookCopyToDelete = bookCopyRepository.findById(bookCopyId).orElseThrow(BookCopyNotFoundException::new);
+        BookCopy bookCopyToDelete = bookCopyRepository.findById(bookCopyId).orElseThrow(()->new BookCopyNotFoundException("Book copy with pointed ID does not exist"));
         Book book = bookDbService.getBook(bookCopyToDelete.getBook().getId());
         book.getBookCopies().remove(bookCopyToDelete);
         bookDbService.saveBook(book);

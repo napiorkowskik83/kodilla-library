@@ -1,10 +1,7 @@
 package com.crud.kodillalibrary.services;
 
 import com.crud.kodillalibrary.controllers.*;
-import com.crud.kodillalibrary.domain.BookCopy;
-import com.crud.kodillalibrary.domain.Borrowing;
-import com.crud.kodillalibrary.domain.BorrowingDto;
-import com.crud.kodillalibrary.domain.Reader;
+import com.crud.kodillalibrary.domain.*;
 import com.crud.kodillalibrary.mappers.BorrowingMapper;
 import com.crud.kodillalibrary.repositories.BorrowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,51 +33,40 @@ public class BorrowingDbService {
             throws BookCopyNotFoundException, ReaderNotFoundException, BookCopyNotAvailableException {
         BookCopy bookCopy = bookCopyDbService.getBookCopy(borrowingDto.getBookCopyId());
         Reader reader = readerDbService.getReader(borrowingDto.getReaderId());
-        if("available".equals(bookCopy.getStatus())) {
-            bookCopyDbService.setStatusToBorrowed(bookCopy.getId());
+        if(BookCopyStatus.AVAILABLE.equals(bookCopy.getStatus())) {
+            bookCopyDbService.setStatusTo(bookCopy.getId(), BookCopyStatus.BORROWED);
             return borrowingRepository.save(borrowingMapper.mapToBorrowing(borrowingDto, bookCopy, reader));
         }else{
-            throw new BookCopyNotAvailableException();
+            throw new BookCopyNotAvailableException("Chosen book copy is not available!");
         }
     }
 
     public Borrowing makeReturn(final Long borrowingId)
             throws BorrowingNotFoundException, BookCopyNotFoundException, ActiveBorrowingNotFoundException{
-        Borrowing borrowing = borrowingRepository.findById(borrowingId).orElseThrow(BorrowingNotFoundException::new);
+        Borrowing borrowing = borrowingRepository.findById(borrowingId).orElseThrow(()-> new BorrowingNotFoundException("Borrowing with pointed ID does not exist!"));
         if(borrowing.getReturnDate() == null) {
-            bookCopyDbService.setStatusToAvailable(borrowing.getBookCopy().getId());
+            bookCopyDbService.setStatusTo(borrowing.getBookCopy().getId(), BookCopyStatus.AVAILABLE);
             borrowing.setReturnDate(new Date());
             return borrowingRepository.save(borrowing);
         }else{
-            throw new ActiveBorrowingNotFoundException();
+            throw new ActiveBorrowingNotFoundException("Chosen borrowing is already finished!");
         }
     }
 
-    public Borrowing finishBorrowingAsLost(final Long borrowingId)
+    public Borrowing finishBorrowingAs(final Long borrowingId, final BookCopyStatus status)
             throws BorrowingNotFoundException, BookCopyNotFoundException, ActiveBorrowingNotFoundException{
-        Borrowing borrowing = borrowingRepository.findById(borrowingId).orElseThrow(BorrowingNotFoundException::new);
+        Borrowing borrowing = borrowingRepository.findById(borrowingId).orElseThrow(()-> new BorrowingNotFoundException("Borrowing with pointed ID does not exist!"));
         if(borrowing.getReturnDate() == null) {
-            bookCopyDbService.setStatusToLost(borrowing.getBookCopy().getId());
+            bookCopyDbService.setStatusTo(borrowing.getBookCopy().getId(), status);
             borrowing.setReturnDate(new Date());
             return borrowingRepository.save(borrowing);
         }else{
-            throw new ActiveBorrowingNotFoundException();
-        }
-    }
-    public Borrowing finishBorrowingAsTattered(final Long borrowingId)
-            throws BorrowingNotFoundException, BookCopyNotFoundException, ActiveBorrowingNotFoundException{
-        Borrowing borrowing = borrowingRepository.findById(borrowingId).orElseThrow(BorrowingNotFoundException::new);
-        if(borrowing.getReturnDate() == null) {
-            bookCopyDbService.setStatusToTattered(borrowing.getBookCopy().getId());
-            borrowing.setReturnDate(new Date());
-            return borrowingRepository.save(borrowing);
-        }else{
-            throw new ActiveBorrowingNotFoundException();
+            throw new ActiveBorrowingNotFoundException("Chosen borrowing is already finished!");
         }
     }
 
     public Borrowing getBorrowing(final Long id) throws BorrowingNotFoundException{
-        return borrowingRepository.findById(id).orElseThrow(BorrowingNotFoundException::new);
+        return borrowingRepository.findById(id).orElseThrow(()-> new BorrowingNotFoundException("Borrowing with pointed ID does not exist!"));
     }
 
     public List<Borrowing> getAllBorrowings(){

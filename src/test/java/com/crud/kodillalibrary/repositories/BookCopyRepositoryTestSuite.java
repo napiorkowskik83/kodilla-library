@@ -2,6 +2,7 @@ package com.crud.kodillalibrary.repositories;
 
 import com.crud.kodillalibrary.domain.Book;
 import com.crud.kodillalibrary.domain.BookCopy;
+import com.crud.kodillalibrary.domain.BookCopyStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +65,7 @@ public class BookCopyRepositoryTestSuite {
 
         BookCopy book1Copy3 = new BookCopy(book1);
         book1.getBookCopies().add(book1Copy3);
-        book1Copy3.setStatus("lost");
+        book1Copy3.setStatus(BookCopyStatus.LOST);
 
         //When
         bookCopyRepository.save(book1Copy1);
@@ -109,7 +110,7 @@ public class BookCopyRepositoryTestSuite {
 
 
         //When
-        book1Copy2.setStatus("borrowed");
+        book1Copy2.setStatus(BookCopyStatus.BORROWED);
         bookCopyRepository.save(book1Copy1);
         bookCopyRepository.save(book1Copy2);
         bookCopyRepository.save(book2Copy1);
